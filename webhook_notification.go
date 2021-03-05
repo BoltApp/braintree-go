@@ -31,6 +31,7 @@ const (
 	DisputeExpiredWebhook                    = "dispute_expired"
 	DisputeAcceptedWebhook                   = "dispute_accepted"
 	DisputeDisputedWebhook                   = "dispute_disputed"
+	PaymentMethodRevokedByCustomer           = "payment_method_revoked_by_customer"
 )
 
 type WebhookNotification struct {
