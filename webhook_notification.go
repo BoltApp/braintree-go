@@ -83,6 +83,7 @@ type webhookSubject struct {
 	Transaction               *Transaction               `xml:",omitempty"`
 	Dispute                   *Dispute                   `xml:"dispute,omitempty"`
 	AccountUpdaterDailyReport *AccountUpdaterDailyReport `xml:"account-updater-daily-report,omitempty"`
+	PaypalAccount             *PayPalAccount             `xml:"paypal-account"`
 
 	// Remaining Fields:
 	// partner_merchant

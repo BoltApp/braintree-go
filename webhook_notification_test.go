@@ -384,3 +384,50 @@ func TestWebhookParseAccountUpdaterDailyReport(t *testing.T) {
 		t.Errorf("Incorrect report url, expected link-to-csv-report, got %s", notification.AccountUpdaterDailyReport().ReportURL)
 	}
 }
+
+func TestWebhookParsePaymentMethodRevokedByCustomerPaypal(t *testing.T) {
+	t.Parallel()
+
+	webhookGateway := testGateway.WebhookNotification()
+	apiKey := testGateway.credentials.(apiKey)
+	hmacer := newHmacer(apiKey.publicKey, apiKey.privateKey)
+
+	payload := base64.StdEncoding.EncodeToString([]byte(`
+<notification>
+  <kind>payment_method_revoked_by_customer</kind>
+  <timestamp type="datetime">2021-02-26T13:26:49Z</timestamp>
+  <subject>
+    <paypal-account>
+      <billing-agreement-id>B-5DPJMQ3FEXUQJ7</billing-agreement-id>
+      <created-at type="datetime">2021-02-26T13:23:39Z</created-at>
+      <customer-id>348563922</customer-id>
+      <customer-global-id>asmyg4j5zPYEkyeMLN9e8Ahd2vArLK</customer-global-id>
+      <default type="boolean">true</default>
+      <email>test@example.com</email>
+      <global-id>6iSb5ULiTwG2YE</global-id>
+      <image-url>https://assets.braintreegateway.com/payment_method_logo/paypal.png?environment=sandbox</image-url>
+      <subscriptions type="array"></subscriptions>
+      <token>a1b2c3d</token>
+      <updated-at type="datetime">2021-02-26T13:26:49Z</updated-at>
+      <is-channel-initiated type="boolean">false</is-channel-initiated>
+      <payer-id>ABCDEFGHIJKLM</payer-id>
+      <revoked-at type="datetime">2021-02-26T13:26:28Z</revoked-at>
+    </paypal-account>
+  </subject>
+</notification>`))
+	hmacedPayload, err := hmacer.hmac(payload)
+	if err != nil {
+		t.Fatal(err)
+	}
+	signature := hmacer.publicKey + "|" + hmacedPayload
+
+	notification, err := webhookGateway.Parse(signature, payload)
+
+	if err != nil {
+		t.Fatal(err)
+	} else if notification.Kind != PaymentMethodRevokedByCustomer {
+		t.Fatal("Incorrect Notification kind, expected payment_method_revoked_by_customer got", notification.Kind)
+	} else if notification.Subject.PaypalAccount == nil {
+		t.Fatal("Notification should have the Paypal account")
+	}
+}
