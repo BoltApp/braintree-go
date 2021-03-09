@@ -199,8 +199,6 @@ func (r *Response) unpackBody() error {
 			reader = gzipReader
 		}
 
-		defer func() { _ = r.Response.Body.Close() }()
-
 		buf, err := ioutil.ReadAll(reader)
 		if err != nil {
 			return err
