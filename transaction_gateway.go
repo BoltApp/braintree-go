@@ -46,7 +46,7 @@ func (g *TransactionGateway) SubmitForPartialSettlement(ctx context.Context, id 
 		return nil, err
 	}
 	switch resp.StatusCode {
-	case 200:
+	case 201:
 		return resp.transaction()
 	}
 	return nil, &invalidResponseError{resp}
