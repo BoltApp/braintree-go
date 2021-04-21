@@ -36,7 +36,9 @@ func (g *TransactionGateway) Clone(ctx context.Context, id string, tx *Transacti
 	return nil, &invalidResponseError{resp}
 }
 
-// SubmitForPartialSettlement TODO write description
+// SubmitForPartialSettlement submits the transaction with the specified id for settlement for the specified amount.
+// This function can be called multiple times for the same transaction as long as the total settled amount does not
+// exceed the value of the initial authorization.
 func (g *TransactionGateway) SubmitForPartialSettlement(ctx context.Context, id string, amount *Decimal) (*Transaction, error) {
 	tx := &TransactionRequest{
 		Amount: amount,
