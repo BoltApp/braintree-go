@@ -31,6 +31,7 @@ const (
 	DisputeExpiredWebhook                    = "dispute_expired"
 	DisputeAcceptedWebhook                   = "dispute_accepted"
 	DisputeDisputedWebhook                   = "dispute_disputed"
+	PaymentMethodRevokedByCustomer           = "payment_method_revoked_by_customer"
 )
 
 type WebhookNotification struct {
@@ -82,6 +83,7 @@ type webhookSubject struct {
 	Transaction               *Transaction               `xml:",omitempty"`
 	Dispute                   *Dispute                   `xml:"dispute,omitempty"`
 	AccountUpdaterDailyReport *AccountUpdaterDailyReport `xml:"account-updater-daily-report,omitempty"`
+	PaypalAccount             *PayPalAccount             `xml:"paypal-account,omitempty"`
 
 	// Remaining Fields:
 	// partner_merchant
